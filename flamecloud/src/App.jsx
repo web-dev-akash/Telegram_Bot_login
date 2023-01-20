@@ -43,11 +43,22 @@ export default function App() {
         </div>
       )}
       {!user && (
-        <TelegramLoginButton
-          dataOnauth={handleTelegramResponse}
-          botName="AssignmentAkash_bot"
-          language="en"
-        />
+        <div
+          style={{
+            height: "90vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h1>Welcome to The Website</h1>
+          <TelegramLoginButton
+            dataOnauth={handleTelegramResponse}
+            botName="AssignmentAkash_bot"
+            language="en"
+          />
+        </div>
       )}
     </div>
   );

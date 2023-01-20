@@ -4,7 +4,7 @@ export const Todo = () => {
   const [todo, setTodo] = useState([]);
 
   const handleTodoData = async () => {
-    const res = await fetch(`http://localhost:8080/`);
+    const res = await fetch(`https://telegram-api-akash.onrender.com`);
     const res2 = await res.json();
     setTodo(res2.data);
   };
