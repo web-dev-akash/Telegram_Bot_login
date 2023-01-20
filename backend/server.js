@@ -13,7 +13,7 @@ app.use(cors());
 const bot = new Telegraf(botToken);
 
 bot.start((ctx) => {
-  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your data> \n /delete <Task ID> \n /changeStatus <Task ID>`;
+  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your data> \n /delete <Task ID> \n /status <Task ID>`;
   ctx.reply(message);
 });
 bot.command("add", async (ctx) => {
@@ -48,7 +48,7 @@ bot.command("delete", async (ctx) => {
   }
 });
 
-bot.command("changeStatus", async (ctx) => {
+bot.command("status", async (ctx) => {
   try {
     ctx.reply("Changing Todo Status, Please wait !!!");
     // console.log(ctx.update.message.text);
