@@ -1,39 +1,42 @@
 import "./App.css";
-import TelegramLoginButton from "react-telegram-login";
 import { useState, useEffect } from "react";
+import TelegramLoginButton from "react-telegram-login";
 
 export const App = () => {
   const [user, setUser] = useState([]);
   const [todo, setTodo] = useState([]);
-
+  const [found, setFound] = useState(false);
   const handleTodoData = async () => {
     const res = await fetch(`https://telegram-api-akash.onrender.com`);
     const res2 = await res.json();
     setTodo(res2.data);
   };
-  // console.log(todo);
   useEffect(() => {
     handleTodoData();
-  }, []);
+  }, [todo]);
+  console.log(user);
   const handleTelegramResponse = (response) => {
     setUser(response);
     localStorage.setItem("user", JSON.stringify(response));
+    setFound(true);
   };
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
       setUser(foundUser);
+      setFound(true);
     }
   }, []);
 
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    setFound(false);
   };
   return (
     <div className="App">
-      {user && (
+      {found ? (
         <div>
           <div
             style={{
@@ -78,8 +81,8 @@ export const App = () => {
               : null}
           </div>
         </div>
-      )}
-      {!user && (
+      ) : null}
+      {!found ? (
         <div
           style={{
             height: "90vh",
@@ -96,7 +99,7 @@ export const App = () => {
             language="en"
           />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
