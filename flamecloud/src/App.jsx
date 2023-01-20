@@ -1,10 +1,20 @@
 import "./App.css";
 import TelegramLoginButton from "react-telegram-login";
 import { useState, useEffect } from "react";
-import { Todo } from "./Components/Todo";
 
-export default function App() {
-  const [user, setUser] = useState();
+export const App = () => {
+  const [user, setUser] = useState([]);
+  const [todo, setTodo] = useState([]);
+
+  const handleTodoData = async () => {
+    const res = await fetch(`https://telegram-api-akash.onrender.com`);
+    const res2 = await res.json();
+    setTodo(res2.data);
+  };
+  // console.log(todo);
+  useEffect(() => {
+    handleTodoData();
+  }, []);
   const handleTelegramResponse = (response) => {
     setUser(response);
     localStorage.setItem("user", JSON.stringify(response));
@@ -12,7 +22,6 @@ export default function App() {
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
     if (loggedInUser) {
-      console.log(loggedInUser);
       const foundUser = JSON.parse(loggedInUser);
       setUser(foundUser);
     }
@@ -39,7 +48,35 @@ export default function App() {
             <h2>Hi, {user.first_name}</h2>
             <button onClick={handleLogout}>Logout</button>
           </div>
-          <Todo />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              width: "90%",
+              margin: "50px auto",
+              gap: "40px",
+            }}
+          >
+            {todo
+              ? todo.map((item) => (
+                  <div
+                    key={item._id}
+                    style={{
+                      padding: "20px",
+                      borderRadius: "10px",
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p>ID : {item._id}</p>
+                    <h3>{item.task}</h3>
+                    <p>{item.status ? "Completed" : "Not-Completed"}</p>
+                  </div>
+                ))
+              : null}
+          </div>
         </div>
       )}
       {!user && (
@@ -62,4 +99,4 @@ export default function App() {
       )}
     </div>
   );
-}
+};
