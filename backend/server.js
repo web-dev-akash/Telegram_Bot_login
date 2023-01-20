@@ -13,7 +13,7 @@ app.use(cors());
 const bot = new Telegraf(botToken);
 
 bot.start((ctx) => {
-  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your data> \n /delete <Task ID> \n /status <Task ID>`;
+  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your Task> \n /delete <Task ID> \n /status <Task ID> \n Use this link to start : \n http://t.me/AssignmentAkash_bot`;
   ctx.reply(message);
 });
 bot.command("add", async (ctx) => {
