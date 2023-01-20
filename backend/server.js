@@ -10,11 +10,10 @@ const botToken = process.env.BOT_TOKEN;
 const app = express();
 app.use(express.json());
 app.use(cors());
-// const bot = new TelegramBot(botToken, { polling: true });
 const bot = new Telegraf(botToken);
 
 bot.start((ctx) => {
-  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your data> \n /delete <Task ID>`;
+  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your data> \n /delete <Task ID> \n /changeStatus <Task ID>`;
   ctx.reply(message);
 });
 bot.command("add", async (ctx) => {
@@ -22,6 +21,7 @@ bot.command("add", async (ctx) => {
     ctx.reply("Adding Todo, Please wait !!!");
     const body = ctx.update.message.text.split(" ");
     let data = "";
+    1;
     for (let i = 1; i < body.length; i++) {
       data += body[i] + " ";
     }
@@ -36,7 +36,7 @@ bot.command("add", async (ctx) => {
 bot.command("delete", async (ctx) => {
   try {
     ctx.reply("Deleting Todo, Please wait !!!");
-    console.log(ctx.update.message.text);
+    // console.log(ctx.update.message.text);
     const body = ctx.update.message.text.split(" ");
     const id = body[1];
     const res = await Todo.findOneAndDelete({ _id: id });
@@ -48,6 +48,20 @@ bot.command("delete", async (ctx) => {
   }
 });
 
+bot.command("changeStatus", async (ctx) => {
+  try {
+    ctx.reply("Changing Todo Status, Please wait !!!");
+    // console.log(ctx.update.message.text);
+    const body = ctx.update.message.text.split(" ");
+    const id = body[1];
+    const res = await Todo.findOneAndUpdate({ _id: id }, { status: true });
+    // console.log(res);
+    ctx.reply(`Successfully Changed your To-do Status`);
+  } catch (error) {
+    console.log("error", error);
+    ctx.reply("Something Went Wrong");
+  }
+});
 app.get("/", async (req, res) => {
   const body = await Todo.find();
   try {
