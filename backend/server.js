@@ -24,7 +24,7 @@ bot.command("add", async (ctx) => {
     for (let i = 1; i < body.length; i++) {
       data += body[i] + " ";
     }
-    const newTodo = new Todo({ task: data, status: false });
+    const newTodo = new Todo({ task: data, status: "null" });
     await newTodo.save();
     ctx.reply(`Successfully added "${data}" to your to-do list!`);
   } catch (error) {
@@ -50,10 +50,15 @@ bot.command("delete", async (ctx) => {
 bot.command("status", async (ctx) => {
   try {
     ctx.reply("Changing Todo Status, Please wait !!!");
-    // console.log(ctx.update.message.text);
     const body = ctx.update.message.text.split(" ");
-    const id = body[1];
-    const res = await Todo.findOneAndUpdate({ _id: id }, { status: true });
+    const state = body[1];
+    const id = body[2];
+    if (state.toLowerCase() == "pending") {
+      await Todo.findOneAndUpdate({ _id: id }, { status: "false" });
+    }
+    if (state.toLowerCase() == "completed") {
+      await Todo.findOneAndUpdate({ _id: id }, { status: "true" });
+    }
     ctx.reply(`Successfully Changed your To-do Status`);
   } catch (error) {
     console.log("error", error);

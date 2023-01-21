@@ -3,7 +3,7 @@ mongoose.set("strictQuery", false);
 const todoSchema = new mongoose.Schema(
   {
     task: { type: String, required: true },
-    status: { type: Boolean, required: true },
+    status: { type: String, required: true },
   },
   { timestamps: true, versionKey: false }
 );
