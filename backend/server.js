@@ -1,4 +1,3 @@
-const TelegramBot = require("node-telegram-bot-api");
 const { Telegraf } = require("telegraf");
 const connect = require("./database/db");
 const Todo = require("./models/todo.model");
@@ -13,7 +12,7 @@ app.use(cors());
 const bot = new Telegraf(botToken);
 
 bot.start((ctx) => {
-  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n /add <Your Task> \n /delete <Task ID> \n /status <Task ID> \n Use this link to start : \n http://t.me/AssignmentAkash_bot`;
+  let message = `Hi, ${ctx.chat.first_name} Use these Commands \n \n /add - To add a Task \n \n For Exmaple - /add <Your Task> \n \n/delete - To delete the task using Task ID \n\n For Example - /delete <Task ID> \n \n/status - To change the status of your task using Task ID \n\n For Example - /status <pending, completed> <Task ID> \n\n Use this link to view the Tasks: \n\n https://flamecloud-bot-akash.netlify.app/`;
   ctx.reply(message);
 });
 bot.command("add", async (ctx) => {
@@ -55,13 +54,17 @@ bot.command("status", async (ctx) => {
     const body = ctx.update.message.text.split(" ");
     const id = body[1];
     const res = await Todo.findOneAndUpdate({ _id: id }, { status: true });
-    // console.log(res);
     ctx.reply(`Successfully Changed your To-do Status`);
   } catch (error) {
     console.log("error", error);
     ctx.reply("Something Went Wrong");
   }
 });
+
+bot.on("text", async (ctx) => {
+  await ctx.reply(`Hello ${ctx.chat.first_name}`);
+});
+
 app.get("/", async (req, res) => {
   const body = await Todo.find();
   try {

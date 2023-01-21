@@ -1,25 +1,42 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import TelegramLoginButton from "react-telegram-login";
-
+import loadingImage from "./Images/loading.gif";
+import errorImage from "./Images/error.gif";
 export const App = () => {
   const [user, setUser] = useState([]);
   const [todo, setTodo] = useState([]);
   const [found, setFound] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const handleTodoData = async () => {
-    const res = await fetch(`https://telegram-api-akash.onrender.com`);
-    const res2 = await res.json();
-    setTodo(res2.data);
+    try {
+      if (!todo) {
+        setLoading(true);
+      }
+      const res = await fetch(`https://telegram-api-akash.onrender.com`);
+      const res2 = await res.json();
+      setTodo(res2.data);
+      setLoading(false);
+      setError(false);
+    } catch (error) {
+      console.log(error);
+      setError(true);
+    }
   };
+
   useEffect(() => {
-    handleTodoData();
-  }, [todo]);
-  console.log(user);
+    if (user) {
+      handleTodoData();
+    }
+  }, []);
+
   const handleTelegramResponse = (response) => {
     setUser(response);
     localStorage.setItem("user", JSON.stringify(response));
     setFound(true);
   };
+
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
     if (loggedInUser) {
@@ -34,6 +51,34 @@ export const App = () => {
     localStorage.removeItem("user");
     setFound(false);
   };
+  if (loading) {
+    return (
+      <div
+        style={{
+          height: "90vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img width={"300px"} src={loadingImage} alt="loading-img" />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div
+        style={{
+          height: "90vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img src={errorImage} alt="loading-img" />
+      </div>
+    );
+  }
   return (
     <div className="App">
       {found ? (
